@@ -17,12 +17,12 @@ public:
 };
 
 // --- Your Bubble Sort function (unchanged) ---
-void sortByArrivalTime(vector<Process>& procs) {
-    int n = procs.size();
+void sortByArrivalTime(vector<Process>& p) {
+    int n = p.size();
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (procs[j].at > procs[j + 1].at) {
-                swap(procs[j], procs[j + 1]);
+            if (p[j].at > p[j + 1].at) {
+                swap(p[j], p[j + 1]);
             }
         }
     }
@@ -45,7 +45,7 @@ int main() {
     cout << "Enter time quantum (for high-priority queue): ";
     cin >> tq;
 
-    vector<Process> procs(n); // This vector holds all processes
+    vector<Process> p(n); // This vector holds all processes
 
     // We will store the *index* of the process in the queues
     queue<int> q1; // q1 = High-Priority (Round Robin)
@@ -55,15 +55,15 @@ int main() {
         int id, at, bt, priority;
         cout << "Enter ID, AT, BT, Priority for P" << i + 1 << ": ";
         cin >> id >> at >> bt >> priority;
-        procs[i].id = id;
-        procs[i].at = at;
-        procs[i].bt = bt;
-        procs[i].rt = bt; // Initialize remaining time
-        procs[i].priority = priority;
+        p[i].id = id;
+        p[i].at = at;
+        p[i].bt = bt;
+        p[i].rt = bt; // Initialize remaining time
+        p[i].priority = priority;
     }
 
     // Sort all processes by arrival time using your function
-    sortByArrivalTime(procs);
+    sortByArrivalTime(p);
 
     int curProcInd = 0; // The index of the *next* process to arrive
     int time = 0;       // The main simulation clock
@@ -75,8 +75,8 @@ int main() {
     while (done < n) {
 
         // 1. Add any newly arrived processes to the correct priority queue
-        while (curProcInd < n && procs[curProcInd].at <= time) {
-            if (procs[curProcInd].priority == 1) {
+        while (curProcInd < n && p[curProcInd].at <= time) {
+            if (p[curProcInd].priority == 1) {
                 q1.push(curProcInd); // Push the *index*
             } else {
                 q2.push(curProcInd); // Push the *index*
@@ -93,26 +93,26 @@ int main() {
             q1.pop();
 
             // Run for one quantum or its remaining time, whichever is smaller
-            int burst = min(procs[i].rt, tq);
+            int burst = min(p[i].rt, tq);
             time += burst;
-            procs[i].rt -= burst;
+            p[i].rt -= burst;
 
-            cout << "P" << procs[i].id; // Print the process that just ran
+            cout << "P" << p[i].id; // Print the process that just ran
 
             // 3. Add any processes that arrived *during* this burst
-            while (curProcInd < n && procs[curProcInd].at <= time) {
-                 if (procs[curProcInd].priority == 1) q1.push(curProcInd);
+            while (curProcInd < n && p[curProcInd].at <= time) {
+                 if (p[curProcInd].priority == 1) q1.push(curProcInd);
                  else q2.push(curProcInd);
                  curProcInd++;
             }
             
             // 4. Handle the process that just ran
-            if (procs[i].rt > 0) {
+            if (p[i].rt > 0) {
                 // Not finished, add it back to the end of its queue
                 q1.push(i);
             } else {
                 // Finished
-                procs[i].completed(time);
+                p[i].completed(time);
                 done++;
             }
             if (done < n) cout << " -> ";
@@ -125,20 +125,20 @@ int main() {
             q2.pop();
             
             // This is FCFS, so it runs for its *entire* remaining time
-            int burst = procs[i].rt;
+            int burst = p[i].rt;
             
             // If CPU was idle, jump time to this process's arrival
-            if (time < procs[i].at) {
-                time = procs[i].at;
+            if (time < p[i].at) {
+                time = p[i].at;
             }
             
             time += burst;
-            procs[i].rt = 0; // It's now finished
+            p[i].rt = 0; // It's now finished
 
-            cout << "P" << procs[i].id; // Print the process that just ran
+            cout << "P" << p[i].id; // Print the process that just ran
 
             // This process is now complete
-            procs[i].completed(time);
+            p[i].completed(time);
             done++;
             
             if (done < n) cout << " -> ";
@@ -149,7 +149,7 @@ int main() {
         else {
             // Jump time to the next process arrival
             if (curProcInd < n) {
-                time = procs[curProcInd].at;
+                time = p[curProcInd].at;
             } else {
                 // Should not happen if done < n, but as a safeguard
                 time++;
@@ -174,16 +174,16 @@ int main() {
     // since we originally sorted by arrival time.
     for(int i=0; i<n; ++i) {
         for(int j=0; j<n-i-1; ++j) {
-            if(procs[j].id > procs[j+1].id) {
-                swap(procs[j], procs[j+1]);
+            if(p[j].id > p[j+1].id) {
+                swap(p[j], p[j+1]);
             }
         }
     }
     
     for (int i = 0; i < n; i++) {
-        printProc(procs[i]);
-        totalWT += procs[i].wt;
-        totalTAT += procs[i].tat;
+        printProc(p[i]);
+        totalWT += p[i].wt;
+        totalTAT += p[i].tat;
         cout << endl;
     }
 
