@@ -7,17 +7,6 @@
 
 using namespace std;
 
-// Helper function to print the result
-void printFaults(const string& algorithm, int pageFaults) {
-    cout << "--- " << algorithm << " ---" << endl;
-    cout << "Total Page Faults: " << pageFaults << endl << endl;
-}
-
-/**
- * 1. FIFO (First-In-First-Out)
- *
- * Uses a queue to track which page has been in memory the longest.
- */
 int FIFO(const vector<int>& requests, int numFrames) {
     int pageFaults = 0;
     unordered_set<int> frames; // To check if a page is in a frame
@@ -44,11 +33,7 @@ int FIFO(const vector<int>& requests, int numFrames) {
     return pageFaults;
 }
 
-/**
- * 2. LRU (Least Recently Used)
- *
- * Replaces the page that has not been *used* for the longest time.
- */
+ 
 int LRU(const vector<int>& requests, int numFrames) {
     int pageFaults = 0;
     unordered_set<int> frames;
@@ -142,25 +127,16 @@ int Optimal(const vector<int>& requests, int numFrames) {
 
 
 int main() {
-    // Reference string from your exam paper (Q9)
+   
     vector<int> requests = {1, 2, 3, 4, 1, 5, 6, 2, 1, 2, 3, 7, 6, 3, 2, 1, 2, 3, 6};
     
-    // You can change this value to test 5, 6, or 7
     int numFrames = 5; 
 
     cout << "Running Page Replacement Algorithms with " << numFrames << " frames." << endl;
     cout << "Reference String: 1, 2, 3, 4, 1, 5, 6, 2, 1, 2, 3, 7, 6, 3, 2, 1, 2, 3, 6" << endl << endl;
-
-    printFaults("FIFO", FIFO(requests, numFrames));
-    printFaults("LRU", LRU(requests, numFrames));
-    printFaults("Optimal", Optimal(requests, numFrames));
-
-    // Example for 6 frames
-    numFrames = 6;
-    cout << "--- Running again with " << numFrames << " frames ---" << endl;
-    printFaults("FIFO", FIFO(requests, numFrames));
-    printFaults("LRU", LRU(requests, numFrames));
-    printFaults("Optimal", Optimal(requests, numFrames));
+    cout<<"Total Page Faults in FIFO :"<<FIFO(requests, numFrames)<<endl; 
+    cout<<"Total Page Faults in LRU :"<<LRU(requests, numFrames)<<endl; 
+    cout<<"Total Page Faults in Optimal :"<<Optimal(requests, numFrames)<<endl; 
 
     return 0;
 }
