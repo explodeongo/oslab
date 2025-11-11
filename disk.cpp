@@ -1,34 +1,32 @@
 #include <iostream>
 #include <vector>
-#include <algorithm> // For sort
-#include <cmath>     // For abs
-#include <climits>   // For INT_MAX
+#include <algorithm> 
+#include <cmath>    
+#include <climits>   
 
 using namespace std;
 
-// A helper function to print the sequence and total movement
 void printResults(const string& algorithm, int totalMovement, const vector<int>& sequence) {
     cout << "--- " << algorithm << " ---" << endl;
     cout << "Seek Sequence: ";
-    for (size_t i = 0; i < sequence.size(); ++i) {
-        cout << sequence[i] << (i == sequence.size() - 1 ? "" : " -> ");
+    int n=sequence.size();
+    for (int i = 0; i < n; ++i) {
+        cout << sequence[i];
+        if(i<n-1){
+            cout<<" -> ";
+        }
     }
     cout << "\nTotal Head Movement: " << totalMovement << " cylinders" << endl << endl;
 }
 
-/**
- * 1. FCFS (First-Come, First-Served)
- *
- * Services requests in the order they appear in the queue.
- */
 void FCFS(vector<int> requests, int head) {
     int totalMovement = 0;
     vector<int> sequence;
-    sequence.push_back(head); // Start at the initial head position
+    sequence.push_back(head); 
 
     for (int request : requests) {
-        totalMovement += abs(request - head); // Add movement
-        head = request;                       // Move head to the new request
+        totalMovement += abs(request - head); 
+        head = request;                       
         sequence.push_back(head);
     }
 
@@ -272,7 +270,7 @@ void CLOOK(vector<int> requests, int head, string direction) {
         }
 
         // Move up from the lowest, servicing remaining requests
-        for (size_t i = 1; i < left.size(); ++i) { // Start from 1, as we're at front()
+        for (int i = 1; i < left.size(); ++i) { // Start from 1, as we're at front()
             totalMovement += abs(left[i] - head);
             head = left[i];
             sequence.push_back(head);
@@ -295,7 +293,7 @@ void CLOOK(vector<int> requests, int head, string direction) {
 
         // Move down from the highest, servicing remaining requests
         sort(right.rbegin(), right.rend());
-        for (size_t i = 1; i < right.size(); ++i) { // Start from 1
+        for (int i = 1; i < right.size(); ++i) { // Start from 1
             totalMovement += abs(right[i] - head);
             head = right[i];
             sequence.push_back(head);

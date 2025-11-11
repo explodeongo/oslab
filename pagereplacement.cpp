@@ -15,10 +15,10 @@ int FIFO(const vector<int>& requests, int numFrames) {
     for (int page : requests) {
         // Check if page is NOT in frames (a "miss")
         if (frames.find(page) == frames.end()) {
+           
             pageFaults++;
-
-            // Check if frames are full
-            if (frames.size() == numFrames) {
+                // Check if frames are full
+             if (frames.size() == numFrames) {
                 // Frames are full, need to replace
                 int victim = fifoQueue.front(); // Get the "first-in" page
                 fifoQueue.pop();
@@ -129,7 +129,7 @@ int Optimal(const vector<int>& requests, int numFrames) {
 int main() {
    
     vector<int> requests = {1, 2, 3, 4, 1, 5, 6, 2, 1, 2, 3, 7, 6, 3, 2, 1, 2, 3, 6};
-    
+
     int numFrames = 5; 
 
     cout << "Running Page Replacement Algorithms with " << numFrames << " frames." << endl;

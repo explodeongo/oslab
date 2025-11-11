@@ -53,8 +53,6 @@ void first_fit(vector<int>&memory,vector<int>& process,int num_mem,int num_proc)
         compaction(memory,num_mem);
         break;
     }
-    int rem_mem=0;
-    for(auto el : memory) rem_mem+=el;
     cout<<"Remaining Block sizes : ";
     cout<<"[";
     for(int i=0;i<num_mem;i++){
@@ -98,8 +96,7 @@ void worst_fit(vector<int>&memory,vector<int>& process,int num_mem,int num_proc)
         compaction(memory,num_mem);
         break;
     }
-    int rem_mem=0;
-    for(auto el : memory) rem_mem+=el;
+    
     cout<<"Remaining Block sizes : ";
     cout<<"[";
     for(int i=0;i<num_mem;i++){
@@ -144,8 +141,6 @@ void best_fit(vector<int>&memory,vector<int>& process,int num_mem,int num_proc){
         compaction(memory,num_mem);
         break;
     }
-    int rem_mem=0;
-    for(auto el : memory) rem_mem+=el;
     cout<<"Remaining Block sizes : ";
     cout<<"[";
     for(int i=0;i<num_mem;i++){
