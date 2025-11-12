@@ -5,13 +5,13 @@ using namespace std;
 
 class Process {
     public:
-    int id;     // process number
-    int at;     // arrival time
-    int bt;     // burst time
-    int ct;     // completion time
-    int tat;    // turnaround time
-    int wt;     // waiting time
-    bool done;  // check if finished
+    int id;    
+    int at;    
+    int bt;     
+    int ct;     
+    int tat;   
+    int wt;     
+    bool done;  
 };
 
 int main() {
@@ -30,13 +30,13 @@ int main() {
     }
 
     int time = 0, completed = 0;
-    vector<int> sequence; // execution order
+    vector<int> sequence; 
 
     while (completed < n) {
         int idx = -1;
         int minBT = 1e9;
 
-        // pick process with smallest burst time that has arrived
+
         for (int i = 0; i < n; i++) {
             if (!p[i].done && p[i].at <= time) {
                 if (p[i].bt < minBT) {
@@ -47,7 +47,7 @@ int main() {
         }
 
         if (idx == -1) {
-            time++; // if no process arrived yet, move time forward
+            time++; 
         } else {
             time += p[idx].bt;
             p[idx].ct = time;

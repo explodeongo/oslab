@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
-#include <queue>       // <-- ADDED: for std::queue
-#include <algorithm> // <-- ADDED: for std::min
+#include <queue>       
+#include <algorithm> 
 
 using namespace std;
 
@@ -16,7 +16,6 @@ public:
     }
 };
 
-// --- Your Bubble Sort function (unchanged) ---
 void sortByArrivalTime(vector<Process>& p) {
     int n = p.size();
     for (int i = 0; i < n; i++) {
@@ -28,7 +27,7 @@ void sortByArrivalTime(vector<Process>& p) {
     }
 }
 
-// --- Your print function (unchanged) ---
+
 void printProc(Process& p) {
     cout << setw(4) << "P" << p.id;
     cout << setw(5) << p.at;
@@ -62,7 +61,7 @@ int main() {
         p[i].priority = priority;
     }
 
-    // Sort all processes by arrival time using your function
+    
     sortByArrivalTime(p);
 
     int curProcInd = 0; // The index of the *next* process to arrive
@@ -71,7 +70,7 @@ int main() {
 
     cout << "\nExecution Sequence: ";
 
-    // --- MAIN SIMULATION LOOP (Simplified) ---
+  
     while (done < n) {
 
         // 1. Add any newly arrived processes to the correct priority queue
@@ -170,8 +169,6 @@ int main() {
 
     int totalWT = 0, totalTAT = 0;
     
-    // We must re-sort by ID here to print P1, P2, P3... in order,
-    // since we originally sorted by arrival time.
     for(int i=0; i<n; ++i) {
         for(int j=0; j<n-i-1; ++j) {
             if(p[j].id > p[j+1].id) {

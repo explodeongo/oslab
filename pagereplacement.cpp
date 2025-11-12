@@ -1,31 +1,30 @@
 #include <iostream>
 #include <vector>
-#include <queue>      // For FIFO
-#include <unordered_map> // For LRU
-#include <unordered_set> // For finding items in frames
-#include <climits>   // For INT_MAX
+#include <queue>      
+#include <unordered_map> 
+#include <unordered_set>
+#include <climits>   
 
 using namespace std;
 
-int FIFO(const vector<int>& requests, int numFrames) {
+int FIFO(vector<int>& requests, int numFrames) {
     int pageFaults = 0;
-    unordered_set<int> frames; // To check if a page is in a frame
-    queue<int> fifoQueue;    // To track the order of arrival
+    unordered_set<int> frames; 
+    queue<int> fifoQueue;    
 
     for (int page : requests) {
-        // Check if page is NOT in frames (a "miss")
+       
         if (frames.find(page) == frames.end()) {
            
             pageFaults++;
-                // Check if frames are full
+                
              if (frames.size() == numFrames) {
-                // Frames are full, need to replace
-                int victim = fifoQueue.front(); // Get the "first-in" page
+                
+                int victim = fifoQueue.front(); 
                 fifoQueue.pop();
-                frames.erase(victim); // Remove victim
+                frames.erase(victim); 
             }
 
-            // Add the new page
             frames.insert(page);
             fifoQueue.push(page);
         }
@@ -34,22 +33,20 @@ int FIFO(const vector<int>& requests, int numFrames) {
 }
 
  
-int LRU(const vector<int>& requests, int numFrames) {
+int LRU(vector<int>& requests, int numFrames) {
     int pageFaults = 0;
     unordered_set<int> frames;
-    // Map to store {page_number -> last_used_index}
     unordered_map<int, int> lruTracker;
 
     for (int i = 0; i < requests.size(); ++i) {
         int page = requests[i];
 
-        // Check if page is NOT in frames (a "miss")
         if (frames.find(page) == frames.end()) {
             pageFaults++;
 
-            // Check if frames are full
+          
             if (frames.size() == numFrames) {
-                // Frames are full, find the LRU page
+                
                 int lruPage = -1;
                 int oldestTime = INT_MAX;
 
@@ -60,51 +57,44 @@ int LRU(const vector<int>& requests, int numFrames) {
                     }
                 }
                 
-                // Remove victim
+               
                 frames.erase(lruPage);
                 lruTracker.erase(lruPage);
             }
             
-            // Add the new page
+            
             frames.insert(page);
         }
 
-        // ALWAYS update the "last used" time for the current page
+       
         lruTracker[page] = i; 
     }
     return pageFaults;
 }
 
-/**
- * 3. Optimal (OPT)
- *
- * Replaces the page that will not be used for the *longest time in the future*.
- */
-int Optimal(const vector<int>& requests, int numFrames) {
+int Optimal(vector<int>& requests, int numFrames) {
     int pageFaults = 0;
     unordered_set<int> frames;
 
     for (int i = 0; i < requests.size(); ++i) {
         int page = requests[i];
 
-        // Check if page is NOT in frames (a "miss")
         if (frames.find(page) == frames.end()) {
             pageFaults++;
 
-            // Check if frames are full
             if (frames.size() == numFrames) {
-                // Frames are full, find the optimal victim
+               
                 int victim = -1;
-                int farthestUse = -1; // Index of the farthest future use
+                int farthestUse = -1; 
 
                 for (int framePage : frames) {
-                    int nextUse = INT_MAX; // Assume never used again
+                    int nextUse = INT_MAX; 
                     
-                    // Look into the future requests
+                  
                     for (int j = i + 1; j < requests.size(); ++j) {
                         if (requests[j] == framePage) {
                             nextUse = j;
-                            break; // Found the *next* use
+                            break; 
                         }
                     }
 
@@ -114,11 +104,11 @@ int Optimal(const vector<int>& requests, int numFrames) {
                     }
                 }
                 
-                // Remove victim
+                
                 frames.erase(victim);
             }
             
-            // Add the new page
+           
             frames.insert(page);
         }
     }

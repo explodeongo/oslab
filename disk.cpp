@@ -33,11 +33,6 @@ void FCFS(vector<int> requests, int head) {
     printResults("FCFS", totalMovement, sequence);
 }
 
-/**
- * 2. SSTF (Shortest Seek Time First)
- *
- * Selects the request closest to the current head position.
- */
 void SSTF(vector<int> requests, int head) {
     int totalMovement = 0;
     vector<int> sequence;
@@ -48,7 +43,7 @@ void SSTF(vector<int> requests, int head) {
         int shortestSeek = INT_MAX;
         int nextRequestIndex = -1;
 
-        // Find the closest request
+        
         for (int j = 0; j < requests.size(); ++j) {
             int seek = abs(requests[j] - head);
             if (seek < shortestSeek) {
@@ -62,28 +57,21 @@ void SSTF(vector<int> requests, int head) {
         head = nextRequest;
         sequence.push_back(head);
 
-        // Remove the serviced request
+        
         requests.erase(requests.begin() + nextRequestIndex);
     }
 
     printResults("SSTF", totalMovement, sequence);
 }
 
-/**
- * 3. SCAN (Elevator Algorithm)
- *
- * Moves from one end of the disk to the other, servicing requests.
- * Reverses direction when it hits the end.
- */
 void SCAN(vector<int> requests, int head, string direction, int diskSize) {
     int totalMovement = 0;
     vector<int> sequence;
     sequence.push_back(head);
 
-    // Sort requests to make scanning easy
     sort(requests.begin(), requests.end());
 
-    // Find the point to split the requests
+    
     vector<int> left, right;
     for (int req : requests) {
         if (req < head) {
@@ -92,33 +80,27 @@ void SCAN(vector<int> requests, int head, string direction, int diskSize) {
             right.push_back(req);
         }
     }
-
-    // Service requests based on direction
     if (direction == "up") {
-        // Move up, servicing requests
+       
         for (int req : right) {
             totalMovement += abs(req - head);
             head = req;
             sequence.push_back(head);
         }
         
-        // Move to the end of the disk
+       
         if (head != diskSize - 1) {
              totalMovement += abs((diskSize - 1) - head);
              head = diskSize - 1;
              sequence.push_back(head);
         }
-
-        // Move down, servicing remaining requests
-        // sort left in descending order
         sort(left.rbegin(), left.rend()); 
         for (int req : left) {
             totalMovement += abs(req - head);
             head = req;
             sequence.push_back(head);
         }
-    } else { // direction == "down"
-        // Move down, servicing requests (in reverse sorted order)
+    } else { 
         sort(left.rbegin(), left.rend());
         for (int req : left) {
             totalMovement += abs(req - head);
@@ -126,14 +108,14 @@ void SCAN(vector<int> requests, int head, string direction, int diskSize) {
             sequence.push_back(head);
         }
 
-        // Move to the beginning of the disk (cylinder 0)
+        
         if (head != 0) {
             totalMovement += abs(0 - head);
             head = 0;
             sequence.push_back(head);
         }
 
-        // Move up, servicing remaining requests
+        
         for (int req : right) {
             totalMovement += abs(req - head);
             head = req;
@@ -144,13 +126,6 @@ void SCAN(vector<int> requests, int head, string direction, int diskSize) {
     printResults("SCAN", totalMovement, sequence);
 }
 
-/**
- * 4. C-SCAN (Circular SCAN)
- *
- * Moves from one end to the other, servicing requests.
- * When it hits the end, it "jumps" back to the beginning and
- * starts moving in the same direction again.
- */
 void CSCAN(vector<int> requests, int head, string direction, int diskSize) {
     int totalMovement = 0;
     vector<int> sequence;
@@ -168,35 +143,32 @@ void CSCAN(vector<int> requests, int head, string direction, int diskSize) {
     }
 
     if (direction == "up") {
-        // Move up, servicing requests
+        
         for (int req : right) {
             totalMovement += abs(req - head);
             head = req;
             sequence.push_back(head);
         }
 
-        // Move to the end of the disk
+        
         if (head != diskSize - 1) {
             totalMovement += abs((diskSize - 1) - head);
             head = diskSize - 1;
             sequence.push_back(head);
         }
         
-        // Jump to the beginning
-        if (!left.empty()) { // Only jump if there are requests on the other side
-            totalMovement += (diskSize - 1); // Full sweep
+    
+        if (!left.empty()) { 
+            totalMovement += (diskSize - 1);
             head = 0;
             sequence.push_back(head);
         }
-
-        // Move up from the beginning, servicing remaining requests
         for (int req : left) {
             totalMovement += abs(req - head);
             head = req;
             sequence.push_back(head);
         }
-    } else { // direction == "down"
-        // Move down, servicing requests (in reverse sorted order)
+    } else { 
         sort(left.rbegin(), left.rend());
         for (int req : left) {
             totalMovement += abs(req - head);
@@ -204,21 +176,20 @@ void CSCAN(vector<int> requests, int head, string direction, int diskSize) {
             sequence.push_back(head);
         }
 
-        // Move to the beginning (cylinder 0)
+       
         if (head != 0) {
             totalMovement += abs(0 - head);
             head = 0;
             sequence.push_back(head);
         }
 
-        // Jump to the end
+        
         if (!right.empty()) {
             totalMovement += (diskSize - 1);
             head = diskSize - 1;
             sequence.push_back(head);
         }
 
-        // Move down from the end, servicing remaining requests
         sort(right.rbegin(), right.rend());
         for (int req : right) {
             totalMovement += abs(req - head);
@@ -229,15 +200,6 @@ void CSCAN(vector<int> requests, int head, string direction, int diskSize) {
 
     printResults("C-SCAN", totalMovement, sequence);
 }
-
-
-/**
- * 5. C-LOOK (Circular LOOK)
- *
- * Like C-SCAN, but only goes as far as the last request in
- * each direction, then "jumps" to the first request on the
- * other side.
- */
 void CLOOK(vector<int> requests, int head, string direction) {
     int totalMovement = 0;
     vector<int> sequence;
@@ -255,22 +217,20 @@ void CLOOK(vector<int> requests, int head, string direction) {
     }
 
     if (direction == "up") {
-        // Move up, servicing requests
+        
         for (int req : right) {
             totalMovement += abs(req - head);
             head = req;
             sequence.push_back(head);
         }
-
-        // Jump to the lowest request
         if (!left.empty()) {
             totalMovement += abs(left.front() - head);
             head = left.front();
             sequence.push_back(head);
         }
 
-        // Move up from the lowest, servicing remaining requests
-        for (int i = 1; i < left.size(); ++i) { // Start from 1, as we're at front()
+       
+        for (int i = 1; i < left.size(); ++i) { 
             totalMovement += abs(left[i] - head);
             head = left[i];
             sequence.push_back(head);

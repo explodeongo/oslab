@@ -1,22 +1,22 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
-#include <climits> // <-- ADDED (for INT_MAX)
+#include <climits> 
 
 using namespace std;
 
 class Process {
     public:
-    int id;     // process number
-    int at;     // arrival time
-    int bt;     // burst time
+    int id;    
+    int at;     
+    int bt;     
 
-    int rt;     // <-- ADDED (remaining time)
+    int rt;    
     
-    int ct;     // completion time
-    int tat;    // turnaround time
-    int wt;     // waiting time
-    // 'done' boolean is no longer needed, rt=0 is our check
+    int ct;     
+    int tat;    
+    int wt;     
+   
 };
 
 int main() {
@@ -31,19 +31,19 @@ int main() {
         cin >> p[i].at;
         cout << "Enter Burst Time for P" << p[i].id << ": ";
         cin >> p[i].bt;
-        p[i].rt = p[i].bt; // <-- ADDED (initialize remaining time)
+        p[i].rt = p[i].bt; 
     }
 
     int time = 0, completed = 0;
-    vector<int> sequence; // execution order
+    vector<int> sequence;
 
     while (completed < n) {
         int idx = -1;
-        int minRT = INT_MAX; // <-- CHANGED (find min *Remaining* Time)
+        int minRT = INT_MAX; 
 
-        // pick process with smallest *remaining* time that has arrived
+        
         for (int i = 0; i < n; i++) {
-            // <-- CHANGED (check rt > 0 instead of !done)
+            
             if (p[i].at <= time && p[i].rt > 0) { 
                 if (p[i].rt < minRT) {
                     minRT = p[i].rt;
@@ -53,14 +53,14 @@ int main() {
         }
 
         if (idx == -1) {
-            time++; // if no process arrived yet, CPU is idle
+            time++; 
         } else {
-            // A process runs for one time unit
-            p[idx].rt--; // <-- CHANGED (decrement remaining time)
             
-            // Check if the process just finished
+            p[idx].rt--; 
+            
+            
             if (p[idx].rt == 0) {
-                p[idx].ct = time + 1; // <-- CHANGED (finishes at end of this tick)
+                p[idx].ct = time + 1; 
                 p[idx].tat = p[idx].ct - p[idx].at;
                 p[idx].wt = p[idx].tat - p[idx].bt;
                 
@@ -68,7 +68,7 @@ int main() {
                 sequence.push_back(p[idx].id);
             }
             
-            time++; // <-- CHANGED (time always moves forward)
+            time++; 
         }
     }
 
@@ -85,7 +85,7 @@ int main() {
     cout << "\nAverage Waiting Time: " << avgWT / n << endl;
     cout << "Average Turnaround Time: " << avgTAT / n << endl;
 
-    // This sequence shows the order of *completion*
+   
     cout << "\nCompletion Order: ";
     for (int id : sequence) cout << "P" << id << " ";
     cout << endl;
