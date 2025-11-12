@@ -235,8 +235,8 @@ void CLOOK(vector<int> requests, int head, string direction) {
             head = left[i];
             sequence.push_back(head);
         }
-    } else { // direction == "down"
-        // Move down, servicing requests (in reverse sorted order)
+    } else { 
+       
         sort(left.rbegin(), left.rend());
         for (int req : left) {
             totalMovement += abs(req - head);
@@ -244,16 +244,16 @@ void CLOOK(vector<int> requests, int head, string direction) {
             sequence.push_back(head);
         }
 
-        // Jump to the highest request
+       
         if (!right.empty()) {
             totalMovement += abs(right.back() - head);
             head = right.back();
             sequence.push_back(head);
         }
 
-        // Move down from the highest, servicing remaining requests
+       
         sort(right.rbegin(), right.rend());
-        for (int i = 1; i < right.size(); ++i) { // Start from 1
+        for (int i = 1; i < right.size(); ++i) { 
             totalMovement += abs(right[i] - head);
             head = right[i];
             sequence.push_back(head);
@@ -264,25 +264,21 @@ void CLOOK(vector<int> requests, int head, string direction) {
 }
 
 int main() {
-    // Data from your exam paper (Q10)
+   
     vector<int> requests = {86, 1470, 913, 1774, 948, 1509, 1022, 1750, 130};
     int head = 143;
-    int diskSize = 5000; // Cylinders 0-4999
-    string direction = "up"; // Implied by previous move 125 -> 143
+    int diskSize = 5000; 
+    string direction = "up"; 
 
     cout << "Initial Head Position: " << head << endl;
     cout << "Request Queue: 86, 1470, 913, 1774, 948, 1509, 1022, 1750, 130" << endl << endl;
 
-    // Run all algorithms
+   
     FCFS(requests, head);
     SSTF(requests, head);
-    
-    // Note: SCAN and C-SCAN go to the *ends* of the disk (0 and 4999)
+
     SCAN(requests, head, direction, diskSize);
     CSCAN(requests, head, direction, diskSize);
-    
-    // Note: LOOK and C-LOOK only go to the *last request* in each direction
-    // (This implementation is for C-LOOK, as requested)
     CLOOK(requests, head, direction);
 
     return 0;
